@@ -1,0 +1,251 @@
+---
+title: "week 12" 
+format: 
+  html: 
+    embed-resources: true 
+editor: visual
+---
+
+```{r}
+#| message: FALSE
+#| warning: false
+#| cashe: false
+#| echo: false
+
+library(tidyverse)
+library(gssr)
+library(dplyr)
+```
+
+```{r}
+gss2018 <- gss_get_yr(2018)
+firstkid <- gss2018 |>
+  select(agekdbrn, educ, sex) |>
+  mutate(latebirth = if_else(agekdbrn >= 28 , 1, 0),
+         degree = if_else(educ >= 16, 1, 0),
+         gender = if_else(sex == 1 , 1, 0)) |>
+  drop_na()
+```
+
+```{r}
+table <- firstkid |>
+  group_by(degree, gender) |>
+  summarize(
+    n=n(), 
+    p_latebirth = mean(latebirth),
+    log_odds = log(p_latebirth/(1-p_latebirth))
+  )
+table
+```
+
+## Linear Regression
+
+### Saturated Model
+
+#### by hand
+
+$$
+P(latebirth_i) = \alpha + \beta_1 * degree_i + \beta_2 * gender_i + \beta_3 * degree_i * gender_i
+$$
+
+$\alpha$ = 0.137
+
+For people having no college degree and being female, the probability of latebirth is 13.7%.
+
+$\beta_1$ = 0.456 - 0.137 = 0.319
+
+Holing gender constant, having college degree increases the probability of latebirth by 31.9 percentage points.
+
+$\beta_2$ = 0.235 - 0.137 = 0.098
+
+Holing degree constant, being male increases the probability of latebirth by 9.8 percentage points.
+
+$\beta_3$ = 0.570 - 0.137 - 0.319 - 0.098 = 0.016
+
+Having college degree and being male increases the probability of latebirth by 1.6 percentage points.
+
+#### by computer
+
+```{r}
+lm1 <- lm(latebirth ~ degree*gender,
+           data = firstkid, 
+           family = binomial(link = "identity"))
+summary(lm1)
+```
+
+$$
+P(latebirth_i) = 0.137 + 0.319 * degree_i + 0.098 * gender_i + 0.016 * degree_i * gender_i
+$$
+
+### Restricted Model
+
+```{r}
+lm2 <- lm(latebirth ~ degree+gender,
+           data = firstkid, 
+           family = binomial(link = "identity"))
+summary(lm2)
+```
+
+$$
+P(latebirth_i) = 0.135 + 0.326 * degree_i + 0.103 * gender_i
+$$ The probability of latebirth of people who have no college degree and are female is 13.5%.
+
+Holding gender constant, having college degree increases the probability of latebirth by 32.6 percentage points.
+
+Holding degree constant, being male increases probability of latebirth by 10.3 percentage points.
+
+### Compare
+
+```{r}
+anova(lm1, lm2)
+```
+
+The deviance of model with interaction term(1753.7) is smaller than model without(1753.8). The difference of two model is small (0.098). So adding an interaction term doesn't provide a more fitted model.
+
+## Logits Regression
+
+### Saturate Model
+
+#### by hand
+
+$$
+log(\frac{P(latebirth_i)}{1-P(latebirth_i)}) = \alpha + \beta_1*degree_i + \beta_2 *gender_i + \beta_3 * degree_i * gender_i
+$$
+
+$\alpha$ = -1.84
+
+The log odds of latebirth of people who has no college degree(degree = 0) and is female(gender = 0) is -1.84
+
+$\beta_1$ = -0.175 - (-1.84) = 1.665
+
+the effect of having college degree(degree = 1) and being female(gender = 0) on log-odds of latebirth is 1.665
+
+$\beta_2$ = -1.18 - (-1.84) = 0.66
+
+the effect of having no college degree(degree = 0) and being male(gender = 1) on log-odss of latebirth is
+
+$\beta_3$ = 0.282 - (-1.84) - 1.665 - 0.66 = -0.203
+
+the effect of having college degree (degree = 1) and being male (gender = 1) on log-odds of latebirth is -0.203
+
+#### by computer
+
+```{r}
+LR1 <- glm(latebirth ~ degree*gender,
+          data = firstkid,
+          family = binomial(link = "logit"))
+summary(LR1)
+```
+
+$$
+log(\frac{P(latebirth_i)}{1-P(latebirth_i)}) = -1.84 + 1.66 *degree_i + 0.66 *gender_i -0.20 * degree_i * gender_i
+$$
+
+### Restricted Model
+
+```{r}
+LR2 <- glm(latebirth ~ degree+gender,
+          data = firstkid,
+          family = binomial(link = "logit"))
+summary(LR2)
+```
+
+$$
+log(\frac{P(latebirth_i)}{1-P(latebirth_i)}) = -1.80 + 1.57 *degree_i + 0.57 *gender_i
+$$
+
+```{r}
+exp(-1.80)
+exp(1.57)
+exp(0.57)
+```
+
+The odds ratio of latebirth of a person who has no college degree and is male is 0.158.
+
+Having college degree increases odds ratio of having latebirth by 4.8 times.
+
+Being a male increases odds ratio of having latebirth by 1.77 times.
+
+### Compare
+
+```{r}
+anova(LR1, LR2)
+```
+
+The deviance of saturated model(1753.7) is smaller than restricted model(1754.4). But the difference is small(-0.71). Usually the model the simpler, the better. Thus, adding the interaction term doesn't make the model better.
+
+## Poissons Regression
+
+```{r}
+tablep <- firstkid |>
+  group_by(degree, gender) |>
+  summarize(
+    n=n(), 
+    birthage = mean(agekdbrn),
+  )
+tablep
+```
+
+### Saturate Model
+
+#### by hand
+
+$$
+birthage_i = \alpha + \beta_1*degree_i + \beta_2 *gender_i + \beta_3 * degree_i * gender_i
+$$
+
+$\alpha$ = 22.1
+
+The birthage for people having no college degree and being female is 22.1 years old.
+
+$beta_1$ = 26.8- 22.1 = 4.7
+
+Having college degree increases birthage by 4.7 years.
+
+$beta_2$ = 24.2 - 22.1 = 2.1
+
+Being male increase birth age by 2.1 years.
+
+$beta_3$ = 28.5 - 22.1 - 4.7 - 2.1 = -0.4
+
+Having college degree and being male decreases birthage by 0.4 years.
+
+#### by computer
+
+```{r}
+plm <- glm(agekdbrn ~ degree*gender,
+           data = firstkid,
+           family = poisson(link = "identity"))
+summary(plm)
+```
+
+$$
+birthage_i = 22.1 + 4.7*degree_i + 2.1 *gender_i - 0.3 * degree_i * gender_i
+$$
+
+#### Restricted Model
+
+```{r}
+plmr <- glm(agekdbrn ~ degree+gender,
+           data = firstkid,
+           family = poisson(link = "identity"))
+summary(plmr)
+```
+
+$$
+birthage_i = 22.11 + 4.55*degree_i + 2.02 *gender_i
+$$
+
+For people having no college degree and being female, age for first kid is 22.11 years old.
+
+Holding gender constant, having college degree increases age for first kid by 4.55 years.
+
+Holding degree constant, being male increases age for first kid by 2.02 years.
+
+### Compare
+
+```{r}
+anova(plm, plmr)
+```
+
+Deviance of model with interaction term(1799.9) is smaller than model without(1800.2). But the difference is small.
