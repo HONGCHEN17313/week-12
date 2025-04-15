@@ -3240,6 +3240,8 @@ window.Quarto = {
 </header>
 
 
+<section id="firstkid" class="level1">
+<h1>Firstkid</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>gss2018 <span class="ot">&lt;-</span> <span class="fu">gss_get_yr</span>(<span class="dv">2018</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -3297,35 +3299,32 @@ P(latebirth_i) = \alpha + \beta_1 * degree_i + \beta_2 * gender_i + \beta_3 * de
 <section id="by-computer" class="level4">
 <h4 class="anchored" data-anchor-id="by-computer">by computer</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(latebirth <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(latebirth <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> firstkid, </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
- extra argument &#39;family&#39; will be disregarded</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-lm(formula = latebirth ~ degree * gender, data = firstkid, family = binomial(link = &quot;identity&quot;))
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--0.5701 -0.2349 -0.1371  0.4299  0.8629 
+glm(formula = latebirth ~ degree * gender, family = binomial(link = &quot;identity&quot;), 
+    data = firstkid)
 
 Coefficients:
-              Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)    0.13714    0.01579   8.686  &lt; 2e-16 ***
-degree         0.31930    0.02928  10.905  &lt; 2e-16 ***
-gender         0.09777    0.02501   3.909 9.62e-05 ***
-degree:gender  0.01588    0.04527   0.351    0.726    
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)    0.13714    0.01300  10.548  &lt; 2e-16 ***
+degree         0.31930    0.03215   9.932  &lt; 2e-16 ***
+gender         0.09777    0.02359   4.145  3.4e-05 ***
+degree:gender  0.01588    0.05066   0.313    0.754    
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-Residual standard error: 0.4178 on 1661 degrees of freedom
-Multiple R-squared:  0.1269,    Adjusted R-squared:  0.1253 
-F-statistic: 80.47 on 3 and 1661 DF,  p-value: &lt; 2.2e-16</code></pre>
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1958.8  on 1664  degrees of freedom
+Residual deviance: 1753.7  on 1661  degrees of freedom
+AIC: 1761.7
+
+Number of Fisher Scoring iterations: 2</code></pre>
 </div>
 </div>
 <p><span class="math display">\[
@@ -3336,54 +3335,51 @@ P(latebirth_i) = 0.137 + 0.319 * degree_i + 0.098 * gender_i + 0.016 * degree_i 
 <section id="restricted-model" class="level3">
 <h3 class="anchored" data-anchor-id="restricted-model">Restricted Model</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(latebirth <span class="sc">~</span> degree<span class="sc">+</span>gender,</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> firstkid, </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: In lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
- extra argument &#39;family&#39; will be disregarded</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lm2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(latebirth <span class="sc">~</span> degree<span class="sc">+</span>gender,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> firstkid, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
-lm(formula = latebirth ~ degree + gender, data = firstkid, family = binomial(link = &quot;identity&quot;))
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--0.5638 -0.2378 -0.1352  0.4362  0.8648 
+glm(formula = latebirth ~ degree + gender, family = binomial(link = &quot;identity&quot;), 
+    data = firstkid)
 
 Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  0.13521    0.01479   9.139  &lt; 2e-16 ***
-degree       0.32595    0.02232  14.601  &lt; 2e-16 ***
-gender       0.10262    0.02084   4.924 9.32e-07 ***
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  0.13611    0.01253  10.862  &lt; 2e-16 ***
+degree       0.32568    0.02487  13.095  &lt; 2e-16 ***
+gender       0.10121    0.02091   4.841 1.29e-06 ***
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 
-Residual standard error: 0.4176 on 1662 degrees of freedom
-Multiple R-squared:  0.1268,    Adjusted R-squared:  0.1258 
-F-statistic: 120.7 on 2 and 1662 DF,  p-value: &lt; 2.2e-16</code></pre>
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1958.8  on 1664  degrees of freedom
+Residual deviance: 1753.8  on 1662  degrees of freedom
+AIC: 1759.8
+
+Number of Fisher Scoring iterations: 3</code></pre>
 </div>
 </div>
 <p><span class="math display">\[
-P(latebirth_i) = 0.135 + 0.326 * degree_i + 0.103 * gender_i
-\]</span> The probability of latebirth of people who have no college degree and are female is 13.5%.</p>
+P(latebirth_i) = 0.136 + 0.326 * degree_i + 0.101 * gender_i
+\]</span> The probability of latebirth of people who have no college degree and are female is 13.6%.</p>
 <p>Holding gender constant, having college degree increases the probability of latebirth by 32.6 percentage points.</p>
-<p>Holding degree constant, being male increases probability of latebirth by 10.3 percentage points.</p>
+<p>Holding degree constant, being male increases probability of latebirth by 10.1 percentage points.</p>
 </section>
 <section id="compare" class="level3">
 <h3 class="anchored" data-anchor-id="compare">Compare</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm1, lm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm1, lm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Analysis of Variance Table
+<pre><code>Analysis of Deviance Table
 
 Model 1: latebirth ~ degree * gender
 Model 2: latebirth ~ degree + gender
-  Res.Df    RSS Df Sum of Sq     F Pr(&gt;F)
-1   1661 289.88                          
-2   1662 289.90 -1 -0.021469 0.123 0.7258</code></pre>
+  Resid. Df Resid. Dev Df  Deviance Pr(&gt;Chi)
+1      1661     1753.7                      
+2      1662     1753.8 -1 -0.098032   0.7542</code></pre>
 </div>
 </div>
 <p>The deviance of model with interaction term(1753.7) is smaller than model without(1753.8). The difference of two model is small (0.098). So adding an interaction term doesn’t provide a more fitted model.</p>
@@ -3410,10 +3406,10 @@ log(\frac{P(latebirth_i)}{1-P(latebirth_i)}) = \alpha + \beta_1*degree_i + \beta
 <section id="by-computer-1" class="level4">
 <h4 class="anchored" data-anchor-id="by-computer-1">by computer</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>LR1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(latebirth <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> firstkid,</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(LR1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>LR1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(latebirth <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> firstkid,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(LR1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3446,10 +3442,10 @@ log(\frac{P(latebirth_i)}{1-P(latebirth_i)}) = -1.84 + 1.66 *degree_i + 0.66 *ge
 <section id="restricted-model-1" class="level3">
 <h3 class="anchored" data-anchor-id="restricted-model-1">Restricted Model</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>LR2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(latebirth <span class="sc">~</span> degree<span class="sc">+</span>gender,</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> firstkid,</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(LR2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>LR2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(latebirth <span class="sc">~</span> degree<span class="sc">+</span>gender,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> firstkid,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(LR2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3477,15 +3473,15 @@ Number of Fisher Scoring iterations: 4</code></pre>
 log(\frac{P(latebirth_i)}{1-P(latebirth_i)}) = -1.80 + 1.57 *degree_i + 0.57 *gender_i
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">1.80</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">1.80</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.1652989</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fl">1.57</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fl">1.57</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4.806648</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fl">0.57</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fl">0.57</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.768267</code></pre>
 </div>
@@ -3497,7 +3493,7 @@ log(\frac{P(latebirth_i)}{1-P(latebirth_i)}) = -1.80 + 1.57 *degree_i + 0.57 *ge
 <section id="compare-1" class="level3">
 <h3 class="anchored" data-anchor-id="compare-1">Compare</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(LR1, LR2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(LR1, LR2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
 
@@ -3514,17 +3510,17 @@ Model 2: latebirth ~ degree + gender
 <section id="poissons-regression" class="level2">
 <h2 class="anchored" data-anchor-id="poissons-regression">Poissons Regression</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>tablep <span class="ot">&lt;-</span> firstkid <span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(degree, gender) <span class="sc">|&gt;</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span><span class="fu">n</span>(), </span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">birthage =</span> <span class="fu">mean</span>(agekdbrn),</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>tablep <span class="ot">&lt;-</span> firstkid <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(degree, gender) <span class="sc">|&gt;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span><span class="fu">n</span>(), </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">birthage =</span> <span class="fu">mean</span>(agekdbrn),</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by &#39;degree&#39;. You can override using the
 `.groups` argument.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>tablep</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>tablep</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 4
 # Groups:   degree [2]
@@ -3555,10 +3551,10 @@ birthage_i = \alpha + \beta_1*degree_i + \beta_2 *gender_i + \beta_3 * degree_i 
 <section id="by-computer-2" class="level4">
 <h4 class="anchored" data-anchor-id="by-computer-2">by computer</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>plm <span class="ot">&lt;-</span> <span class="fu">glm</span>(agekdbrn <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> firstkid,</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(plm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>plm <span class="ot">&lt;-</span> <span class="fu">glm</span>(agekdbrn <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> firstkid,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(plm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3590,10 +3586,10 @@ birthage_i = 22.1 + 4.7*degree_i + 2.1 *gender_i - 0.3 * degree_i * gender_i
 <section id="restricted-model-2" class="level4">
 <h4 class="anchored" data-anchor-id="restricted-model-2">Restricted Model</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>plmr <span class="ot">&lt;-</span> <span class="fu">glm</span>(agekdbrn <span class="sc">~</span> degree<span class="sc">+</span>gender,</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> firstkid,</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(plmr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>plmr <span class="ot">&lt;-</span> <span class="fu">glm</span>(agekdbrn <span class="sc">~</span> degree<span class="sc">+</span>gender,</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> firstkid,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(plmr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3628,7 +3624,7 @@ birthage_i = 22.11 + 4.55*degree_i + 2.02 *gender_i
 <section id="compare-2" class="level3">
 <h3 class="anchored" data-anchor-id="compare-2">Compare</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(plm, plmr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(plm, plmr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Deviance Table
 
@@ -3640,6 +3636,7 @@ Model 2: agekdbrn ~ degree + gender
 </div>
 </div>
 <p>Deviance of model with interaction term(1799.9) is smaller than model without(1800.2). But the difference is small.</p>
+</section>
 </section>
 </section>
 

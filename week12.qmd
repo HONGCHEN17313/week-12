@@ -17,6 +17,7 @@ library(gssr)
 library(dplyr)
 ```
 
+# Firstkid
 ```{r}
 gss2018 <- gss_get_yr(2018)
 firstkid <- gss2018 |>
@@ -67,7 +68,7 @@ Having college degree and being male increases the probability of latebirth by 1
 #### by computer
 
 ```{r}
-lm1 <- lm(latebirth ~ degree*gender,
+lm1 <- glm(latebirth ~ degree*gender,
            data = firstkid, 
            family = binomial(link = "identity"))
 summary(lm1)
@@ -80,19 +81,19 @@ $$
 ### Restricted Model
 
 ```{r}
-lm2 <- lm(latebirth ~ degree+gender,
+lm2 <- glm(latebirth ~ degree+gender,
            data = firstkid, 
            family = binomial(link = "identity"))
 summary(lm2)
 ```
 
 $$
-P(latebirth_i) = 0.135 + 0.326 * degree_i + 0.103 * gender_i
-$$ The probability of latebirth of people who have no college degree and are female is 13.5%.
+P(latebirth_i) = 0.136 + 0.326 * degree_i + 0.101 * gender_i
+$$ The probability of latebirth of people who have no college degree and are female is 13.6%.
 
 Holding gender constant, having college degree increases the probability of latebirth by 32.6 percentage points.
 
-Holding degree constant, being male increases probability of latebirth by 10.3 percentage points.
+Holding degree constant, being male increases probability of latebirth by 10.1 percentage points.
 
 ### Compare
 
@@ -249,3 +250,5 @@ anova(plm, plmr)
 ```
 
 Deviance of model with interaction term(1799.9) is smaller than model without(1800.2). But the difference is small.
+
+
