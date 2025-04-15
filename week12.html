@@ -3294,10 +3294,7 @@ P(latebirth_i) = \alpha + \beta_1 * degree_i + \beta_2 * gender_i + \beta_3 * de
 <p><span class="math inline">\(\beta_2\)</span> = 0.235 - 0.137 = 0.098</p>
 <p>Holing degree constant, being male increases the probability of latebirth by 9.8 percentage points.</p>
 <p><span class="math inline">\(\beta_3\)</span> = 0.570 - 0.137 - 0.319 - 0.098 = 0.016</p>
-<p>Having college degree and being male increases the probability of latebirth by 1.6 percentage points.</p>
-</section>
-<section id="by-computer" class="level4">
-<h4 class="anchored" data-anchor-id="by-computer">by computer</h4>
+<p>For male, having college degree increases the probability of latebirth by 1.6 percentage points; For college degree holders, being male increases the probability of latebirth by 1.6 percentage points. #### by computer</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lm1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(latebirth <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> firstkid, </span>
@@ -3364,7 +3361,8 @@ Number of Fisher Scoring iterations: 3</code></pre>
 </div>
 <p><span class="math display">\[
 P(latebirth_i) = 0.136 + 0.326 * degree_i + 0.101 * gender_i
-\]</span> The probability of latebirth of people who have no college degree and are female is 13.6%.</p>
+\]</span></p>
+<p>For people without a college degree and being female, the probability of latebirth is 13.6%.</p>
 <p>Holding gender constant, having college degree increases the probability of latebirth by 32.6 percentage points.</p>
 <p>Holding degree constant, being male increases probability of latebirth by 10.1 percentage points.</p>
 </section>
@@ -3382,7 +3380,7 @@ Model 2: latebirth ~ degree + gender
 2      1662     1753.8 -1 -0.098032   0.7542</code></pre>
 </div>
 </div>
-<p>The deviance of model with interaction term(1753.7) is smaller than model without(1753.8). The difference of two model is small (0.098). So adding an interaction term doesn’t provide a more fitted model.</p>
+<p>The deviance of model with interaction term(1753.7) is smaller than model without(1753.8). The difference of two model is small (0.098). P value &gt; 0.05, adding an interaction term doesn’t provide a more fitted model. So restricted model is preferred.</p>
 </section>
 </section>
 <section id="logits-regression" class="level2">
@@ -3397,14 +3395,14 @@ log(\frac{P(latebirth_i)}{1-P(latebirth_i)}) = \alpha + \beta_1*degree_i + \beta
 <p><span class="math inline">\(\alpha\)</span> = -1.84</p>
 <p>The log odds of latebirth of people who has no college degree(degree = 0) and is female(gender = 0) is -1.84</p>
 <p><span class="math inline">\(\beta_1\)</span> = -0.175 - (-1.84) = 1.665</p>
-<p>the effect of having college degree(degree = 1) and being female(gender = 0) on log-odds of latebirth is 1.665</p>
+<p>Having college degree(degree = 1) increases log-odds of latebirth by 1.665</p>
 <p><span class="math inline">\(\beta_2\)</span> = -1.18 - (-1.84) = 0.66</p>
-<p>the effect of having no college degree(degree = 0) and being male(gender = 1) on log-odss of latebirth is</p>
+<p>Being male(gender = 1) increases log-odss of latebirth by 0.66</p>
 <p><span class="math inline">\(\beta_3\)</span> = 0.282 - (-1.84) - 1.665 - 0.66 = -0.203</p>
-<p>the effect of having college degree (degree = 1) and being male (gender = 1) on log-odds of latebirth is -0.203</p>
+<p>For male, having college degree (degree = 1) decreases log-odds of latebirth by 0.203; For people with college degree, being male decreases log-odds of latebirth by 0.203.</p>
 </section>
-<section id="by-computer-1" class="level4">
-<h4 class="anchored" data-anchor-id="by-computer-1">by computer</h4>
+<section id="by-computer" class="level4">
+<h4 class="anchored" data-anchor-id="by-computer">by computer</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>LR1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(latebirth <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> firstkid,</span>
@@ -3504,7 +3502,7 @@ Model 2: latebirth ~ degree + gender
 2      1662     1754.4 -1 -0.70994   0.3995</code></pre>
 </div>
 </div>
-<p>The deviance of saturated model(1753.7) is smaller than restricted model(1754.4). But the difference is small(-0.71). Usually the model the simpler, the better. Thus, adding the interaction term doesn’t make the model better.</p>
+<p>The deviance of saturated model(1753.7) is smaller than restricted model(1754.4). But the difference is small(-0.71). P value &gt; 0,05, adding the interaction term doesn’t make the model better. Usually the model the simpler, the better. So the restricted model is preferred.</p>
 </section>
 </section>
 <section id="poissons-regression" class="level2">
@@ -3548,8 +3546,8 @@ birthage_i = \alpha + \beta_1*degree_i + \beta_2 *gender_i + \beta_3 * degree_i 
 <p><span class="math inline">\(beta_3\)</span> = 28.5 - 22.1 - 4.7 - 2.1 = -0.4</p>
 <p>Having college degree and being male decreases birthage by 0.4 years.</p>
 </section>
-<section id="by-computer-2" class="level4">
-<h4 class="anchored" data-anchor-id="by-computer-2">by computer</h4>
+<section id="by-computer-1" class="level4">
+<h4 class="anchored" data-anchor-id="by-computer-1">by computer</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>plm <span class="ot">&lt;-</span> <span class="fu">glm</span>(agekdbrn <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> firstkid,</span>
@@ -3635,7 +3633,403 @@ Model 2: agekdbrn ~ degree + gender
 2      1662     1800.2 -1 -0.31611    0.574</code></pre>
 </div>
 </div>
-<p>Deviance of model with interaction term(1799.9) is smaller than model without(1800.2). But the difference is small.</p>
+<p>Deviance of model with interaction term(1799.9) is smaller than model without(1800.2). But the difference is small. P value &gt; 0.05, adding interaction term doesn’t make the model better. Thus, restricted model is preferred.</p>
+</section>
+</section>
+</section>
+<section id="hourswork" class="level1">
+<h1>Hourswork</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>hourswork <span class="ot">&lt;-</span> gss2018 <span class="sc">|&gt;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(hrs1, educ, sex) <span class="sc">|&gt;</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">overwork =</span> <span class="fu">if_else</span>(hrs1 <span class="sc">&gt;</span> <span class="dv">40</span> , <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">degree =</span> <span class="fu">if_else</span>(educ <span class="sc">&gt;=</span> <span class="dv">16</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">gender =</span> <span class="fu">if_else</span>(sex <span class="sc">==</span> <span class="dv">1</span> , <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>table2 <span class="ot">&lt;-</span> hourswork <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(degree, gender) <span class="sc">|&gt;</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span><span class="fu">n</span>(), </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_overwork =</span> <span class="fu">mean</span>(overwork),</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_odds =</span> <span class="fu">log</span>(p_overwork<span class="sc">/</span>(<span class="dv">1</span><span class="sc">-</span>p_overwork))</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by &#39;degree&#39;. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>table2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 5
+# Groups:   degree [2]
+  degree gender     n p_overwork log_odds
+   &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+1      0      0   440      0.275  -0.969 
+2      0      1   435      0.497  -0.0138
+3      1      0   270      0.322  -0.744 
+4      1      1   234      0.504   0.0171</code></pre>
+</div>
+</div>
+<section id="linear-regression-1" class="level2">
+<h2 class="anchored" data-anchor-id="linear-regression-1">Linear Regression</h2>
+<section id="saturated-model-1" class="level3">
+<h3 class="anchored" data-anchor-id="saturated-model-1">Saturated Model</h3>
+<section id="by-hand-3" class="level4">
+<h4 class="anchored" data-anchor-id="by-hand-3">by hand</h4>
+<p><span class="math display">\[
+P(overwork_i) = \alpha + \beta_1 * degree_i + \beta_2 * gender_i + \beta_3 * degree_i * gender_i
+\]</span></p>
+<p><span class="math inline">\(\alpha\)</span> = 0.275</p>
+<p>For people having no college degree and being female, the probability of work overtime is 27.5%.</p>
+<p><span class="math inline">\(\beta_1\)</span> = 0.322 - 0.275 = 0.047</p>
+<p>Holing gender constant, having college degree increases the probability of work overtime by 4.7 percentage points.</p>
+<p><span class="math inline">\(\beta_2\)</span> = 0.497 - 0.275 = 0.222</p>
+<p>Holing degree constant, being male increases the probability of work overtime by 22.2 percentage points.</p>
+<p><span class="math inline">\(\beta_3\)</span> = 0.504 - 0.275 - 0.047 - 0.222 = -0.04</p>
+<p>For male, having college degree decreases the probability of work overtime by 4 percentage points; For college degree holders, being male decreases the probability of work overtime by 4 percentage points.</p>
+</section>
+<section id="by-computer-2" class="level4">
+<h4 class="anchored" data-anchor-id="by-computer-2">by computer</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>llm1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(overwork <span class="sc">~</span> degree <span class="sc">*</span> gender,</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> hourswork,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(llm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = overwork ~ degree * gender, family = binomial(link = &quot;identity&quot;), 
+    data = hourswork)
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)    0.27500    0.02129  12.919  &lt; 2e-16 ***
+degree         0.04722    0.03552   1.329    0.184    
+gender         0.22155    0.03206   6.911 4.82e-12 ***
+degree:gender -0.03950    0.05390  -0.733    0.464    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1848.1  on 1378  degrees of freedom
+Residual deviance: 1784.4  on 1375  degrees of freedom
+AIC: 1792.4
+
+Number of Fisher Scoring iterations: 2</code></pre>
+</div>
+</div>
+<p><span class="math display">\[
+P(overwork_i) = 0.275 + 0.047 * degree_i + 0.222 * gender_i - 0.040 * degree_i * gender_i
+\]</span></p>
+</section>
+</section>
+<section id="restricted-model-3" class="level3">
+<h3 class="anchored" data-anchor-id="restricted-model-3">Restricted Model</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>llm2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(overwork <span class="sc">~</span> degree <span class="sc">+</span> gender,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> hourswork,</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(llm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = overwork ~ degree + gender, family = binomial(link = &quot;identity&quot;), 
+    data = hourswork)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  0.28127    0.01966  14.306  &lt; 2e-16 ***
+degree       0.03012    0.02666   1.130    0.259    
+gender       0.20744    0.02578   8.047 8.52e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1848.1  on 1378  degrees of freedom
+Residual deviance: 1784.9  on 1376  degrees of freedom
+AIC: 1790.9
+
+Number of Fisher Scoring iterations: 3</code></pre>
+</div>
+</div>
+<p><span class="math display">\[
+P(overwork_i) = 0.281 + 0.030 * degree_i + 0.207 * gender_i
+\]</span></p>
+<p><span class="math inline">\(\alpha\)</span> = 0.281</p>
+<p>For people having no college degree and being female, the probability of work overtime is 28.1%.</p>
+<p><span class="math inline">\(\beta_1\)</span> = 0.030</p>
+<p>Holing gender constant, having college degree increases the probability of work overtime by 3 percentage points.</p>
+<p><span class="math inline">\(\beta_2\)</span> = 0.497 - 0.275 = 0.207</p>
+<p>Holing degree constant, being male increases the probability of work overtime by 20.7 percentage points.</p>
+</section>
+<section id="compare-3" class="level3">
+<h3 class="anchored" data-anchor-id="compare-3">Compare</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(llm1, llm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: overwork ~ degree * gender
+Model 2: overwork ~ degree + gender
+  Resid. Df Resid. Dev Df Deviance Pr(&gt;Chi)
+1      1375     1784.4                     
+2      1376     1784.9 -1 -0.53832   0.4631</code></pre>
+</div>
+</div>
+<p>The deviance of saturated model is smaller than restricted model but the difference is small. In this case, adding an interaction term doesn’t provide more accuracy. The simpler model (restricted) is preferred.</p>
+</section>
+</section>
+<section id="logits-regression-1" class="level2">
+<h2 class="anchored" data-anchor-id="logits-regression-1">Logits Regression</h2>
+<section id="saturate-model-2" class="level3">
+<h3 class="anchored" data-anchor-id="saturate-model-2">Saturate Model</h3>
+<section id="by-hand-4" class="level4">
+<h4 class="anchored" data-anchor-id="by-hand-4">by hand</h4>
+<p><span class="math display">\[
+log(\frac{P(overwork_i)}{1-P(overwork_i)}) = \alpha + \beta_1*degree_i + \beta_2 *gender_i + \beta_3 * degree_i * gender_i
+\]</span></p>
+<p><span class="math inline">\(\alpha\)</span> = -0.969</p>
+<p>The log odds of work overtime of people who has no college degree(degree = 0) and is female(gender = 0) is -0.969</p>
+<p><span class="math inline">\(\beta_1\)</span> = -0.744 - (-0.969) = 0.225</p>
+<p>Having college degree(degree = 1) increases on log-odds of work overtime by 1.665</p>
+<p><span class="math inline">\(\beta_2\)</span> = -0.0138 - (-0.969) = 0.9552</p>
+<p>Being male(gender = 1) increases log-odds of work overtime by 0.9552</p>
+<p><span class="math inline">\(\beta_3\)</span> = 0.0171 - (-0.969) - 0.225 - 0.95222 = -0.191</p>
+<p>For male, having college degree (degree = 1) decreases log-odds of work overtime by 0.191; For college degree holders, being male decreases log-odds of work overtime by 0.191.</p>
+</section>
+<section id="by-computer-3" class="level4">
+<h4 class="anchored" data-anchor-id="by-computer-3">by computer</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>LRR1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(overwork <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> hourswork,</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(LRR1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = overwork ~ degree * gender, family = binomial(link = &quot;logit&quot;), 
+    data = hourswork)
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)    -0.9694     0.1068  -9.080  &lt; 2e-16 ***
+degree          0.2258     0.1684   1.341    0.180    
+gender          0.9556     0.1435   6.659 2.76e-11 ***
+degree:gender  -0.1949     0.2338  -0.834    0.404    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1848.1  on 1378  degrees of freedom
+Residual deviance: 1784.4  on 1375  degrees of freedom
+AIC: 1792.4
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+<p><span class="math display">\[
+log(\frac{P(overwork_i)}{1-P(overwork_i)}) = -0.9694 + 0.2258*degree_i + 0.9556 *gender_i - 0.1949 * degree_i * gender_i
+\]</span></p>
+</section>
+</section>
+<section id="restricted-model-4" class="level3">
+<h3 class="anchored" data-anchor-id="restricted-model-4">Restricted Model</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>LRR2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(overwork <span class="sc">~</span> degree<span class="sc">+</span>gender,</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">data =</span> hourswork,</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">&quot;logit&quot;</span>))</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(LRR2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = overwork ~ degree + gender, family = binomial(link = &quot;logit&quot;), 
+    data = hourswork)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -0.92917    0.09441  -9.842  &lt; 2e-16 ***
+degree       0.12454    0.11702   1.064    0.287    
+gender       0.88263    0.11320   7.797 6.34e-15 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1848.1  on 1378  degrees of freedom
+Residual deviance: 1785.1  on 1376  degrees of freedom
+AIC: 1791.1
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+<p><span class="math display">\[
+log(\frac{P(overwork_i)}{1-P(overwork_i)}) = -0.9292 + 0.1245*degree_i + 0.8826 *gender_i
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.9292</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3948695</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fl">0.1245</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.132582</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fl">0.8826</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.417176</code></pre>
+</div>
+</div>
+<p>For people having no college degree and is female, the odds ratio of work overtime is 0.394.</p>
+<p>Having college degree increases odds ratio by 1.13 times.</p>
+<p>Being male increases odds ratio by 2.42 times.</p>
+</section>
+<section id="compare-4" class="level3">
+<h3 class="anchored" data-anchor-id="compare-4">Compare</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(LRR1, LRR2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: overwork ~ degree * gender
+Model 2: overwork ~ degree + gender
+  Resid. Df Resid. Dev Df Deviance Pr(&gt;Chi)
+1      1375     1784.4                     
+2      1376     1785.1 -1 -0.69453   0.4046</code></pre>
+</div>
+</div>
+<p>The deviance of saturated model is smaller than restricted model but the difference is small. In this case, adding an interaction term doesn’t provide more accuracy. The simpler model (restricted) is preferred.</p>
+</section>
+</section>
+<section id="poissons-regression-1" class="level2">
+<h2 class="anchored" data-anchor-id="poissons-regression-1">Poissons Regression</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>tablep2 <span class="ot">&lt;-</span> hourswork <span class="sc">|&gt;</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(degree, gender) <span class="sc">|&gt;</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n=</span><span class="fu">n</span>(), </span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">workhour =</span> <span class="fu">mean</span>(hrs1),</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by &#39;degree&#39;. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>tablep2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+# Groups:   degree [2]
+  degree gender     n workhour
+   &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt;
+1      0      0   440     37.9
+2      0      1   435     44.6
+3      1      0   270     38.7
+4      1      1   234     44.7</code></pre>
+</div>
+</div>
+<section id="saturate-model-3" class="level3">
+<h3 class="anchored" data-anchor-id="saturate-model-3">Saturate Model</h3>
+<section id="by-hand-5" class="level4">
+<h4 class="anchored" data-anchor-id="by-hand-5">by hand</h4>
+<p><span class="math display">\[
+workhour_i = \alpha + \beta_1*degree_i + \beta_2 *gender_i + \beta_3 * degree_i * gender_i
+\]</span></p>
+<p><span class="math inline">\(\alpha\)</span> = 37.9</p>
+<p>The weekly work hour for people having no college degree and being female is 37.9 hours.</p>
+<p><span class="math inline">\(beta_1\)</span> = 38.7 - 37.9 = 0.8</p>
+<p>Having college degree increases weekly work hour by 0.8 hours.</p>
+<p><span class="math inline">\(beta_2\)</span> = 44.6 - 37.9 = 6.7</p>
+<p>Being male increase weekly work hour by 6.7 hours.</p>
+<p><span class="math inline">\(beta_3\)</span> = 44.7 - 37.9 - 0.8 - 6.7 = -0.7</p>
+<p>For male, Having college degree decreases weekly work hour by 0.7 hours. For college degree holders, being male decrease weekly work hour by 0.7 hours.</p>
+</section>
+<section id="by-computer-4" class="level4">
+<h4 class="anchored" data-anchor-id="by-computer-4">by computer</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>plmm1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(hrs1 <span class="sc">~</span> degree<span class="sc">*</span>gender,</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> hourswork,</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(plmm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = hrs1 ~ degree * gender, family = poisson(link = &quot;identity&quot;), 
+    data = hourswork)
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)    37.8545     0.2933 129.058   &lt;2e-16 ***
+degree          0.8121     0.4788   1.696   0.0899 .  
+gender          6.7891     0.4344  15.630   &lt;2e-16 ***
+degree:gender  -0.7891     0.7230  -1.091   0.2751    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 7665.3  on 1378  degrees of freedom
+Residual deviance: 7311.6  on 1375  degrees of freedom
+AIC: 14867
+
+Number of Fisher Scoring iterations: 3</code></pre>
+</div>
+</div>
+<p><span class="math display">\[
+workhour_i = 37.85 + 0.81*degree_i + 6.79 *gender_i - 0.79 * degree_i * gender_i
+\]</span> ### Restricted</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>plmm2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(hrs1 <span class="sc">~</span> degree<span class="sc">+</span>gender,</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> hourswork,</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">&quot;identity&quot;</span>))</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(plmm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = hrs1 ~ degree + gender, family = poisson(link = &quot;identity&quot;), 
+    data = hourswork)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  37.9848     0.2685 141.479   &lt;2e-16 ***
+degree        0.4671     0.3588   1.302    0.193    
+gender        6.5046     0.3473  18.730   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 7665.3  on 1378  degrees of freedom
+Residual deviance: 7312.7  on 1376  degrees of freedom
+AIC: 14866
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+<p><span class="math display">\[
+workhour_i = 37.98 + 0.47*degree_i + 6.50 *gender_i
+\]</span></p>
+<p>For people having no college degree and is female, the weekly work hour is 37.98 hours.</p>
+<p>Having college degree increases weekly work hour by 0.47 hours.</p>
+<p>Being male increases weekly work hour by 6.5 hours.</p>
+</section>
+</section>
+<section id="compare-5" class="level3">
+<h3 class="anchored" data-anchor-id="compare-5">Compare</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(plmm1, plmm2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: hrs1 ~ degree * gender
+Model 2: hrs1 ~ degree + gender
+  Resid. Df Resid. Dev Df Deviance Pr(&gt;Chi)
+1      1375     7311.6                     
+2      1376     7312.7 -1  -1.1907   0.2752</code></pre>
+</div>
+</div>
+<p>The deviance of saturated model is smaller than restricted model but the difference is small. In this case, p value &gt; 0.05, adding an interaction term doesn’t provide more accuracy. The simpler model (restricted) is preferred.</p>
 </section>
 </section>
 </section>

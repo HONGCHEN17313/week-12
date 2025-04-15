@@ -18,6 +18,7 @@ library(dplyr)
 ```
 
 # Firstkid
+
 ```{r}
 gss2018 <- gss_get_yr(2018)
 firstkid <- gss2018 |>
@@ -63,9 +64,7 @@ Holing degree constant, being male increases the probability of latebirth by 9.8
 
 $\beta_3$ = 0.570 - 0.137 - 0.319 - 0.098 = 0.016
 
-Having college degree and being male increases the probability of latebirth by 1.6 percentage points.
-
-#### by computer
+For male, having college degree increases the probability of latebirth by 1.6 percentage points; For college degree holders, being male increases the probability of latebirth by 1.6 percentage points. \#### by computer
 
 ```{r}
 lm1 <- glm(latebirth ~ degree*gender,
@@ -89,7 +88,9 @@ summary(lm2)
 
 $$
 P(latebirth_i) = 0.136 + 0.326 * degree_i + 0.101 * gender_i
-$$ The probability of latebirth of people who have no college degree and are female is 13.6%.
+$$ 
+
+For people without a college degree and being female, the probability of latebirth is 13.6%.
 
 Holding gender constant, having college degree increases the probability of latebirth by 32.6 percentage points.
 
@@ -101,7 +102,7 @@ Holding degree constant, being male increases probability of latebirth by 10.1 p
 anova(lm1, lm2)
 ```
 
-The deviance of model with interaction term(1753.7) is smaller than model without(1753.8). The difference of two model is small (0.098). So adding an interaction term doesn't provide a more fitted model.
+The deviance of model with interaction term(1753.7) is smaller than model without(1753.8). The difference of two model is small (0.098). P value > 0.05, adding an interaction term doesn't provide a more fitted model. So restricted model is preferred.
 
 ## Logits Regression
 
@@ -119,15 +120,15 @@ The log odds of latebirth of people who has no college degree(degree = 0) and is
 
 $\beta_1$ = -0.175 - (-1.84) = 1.665
 
-the effect of having college degree(degree = 1) and being female(gender = 0) on log-odds of latebirth is 1.665
+Having college degree(degree = 1) increases log-odds of latebirth by 1.665
 
 $\beta_2$ = -1.18 - (-1.84) = 0.66
 
-the effect of having no college degree(degree = 0) and being male(gender = 1) on log-odss of latebirth is
+Being male(gender = 1) increases log-odss of latebirth by 0.66
 
 $\beta_3$ = 0.282 - (-1.84) - 1.665 - 0.66 = -0.203
 
-the effect of having college degree (degree = 1) and being male (gender = 1) on log-odds of latebirth is -0.203
+For male, having college degree (degree = 1) decreases log-odds of latebirth by 0.203; For people with college degree, being male decreases log-odds of latebirth by 0.203.
 
 #### by computer
 
@@ -173,7 +174,7 @@ Being a male increases odds ratio of having latebirth by 1.77 times.
 anova(LR1, LR2)
 ```
 
-The deviance of saturated model(1753.7) is smaller than restricted model(1754.4). But the difference is small(-0.71). Usually the model the simpler, the better. Thus, adding the interaction term doesn't make the model better.
+The deviance of saturated model(1753.7) is smaller than restricted model(1754.4). But the difference is small(-0.71). P value > 0,05,  adding the interaction term doesn't make the model better. Usually the model the simpler, the better. So the restricted model is preferred.
 
 ## Poissons Regression
 
@@ -249,6 +250,240 @@ Holding degree constant, being male increases age for first kid by 2.02 years.
 anova(plm, plmr)
 ```
 
-Deviance of model with interaction term(1799.9) is smaller than model without(1800.2). But the difference is small.
+Deviance of model with interaction term(1799.9) is smaller than model without(1800.2). But the difference is small. P value > 0.05, adding interaction term doesn't make the model better. Thus, restricted model is preferred.
 
+# Hourswork
+
+```{r}
+hourswork <- gss2018 |>
+  select(hrs1, educ, sex) |>
+  mutate(overwork = if_else(hrs1 > 40 , 1, 0),
+         degree = if_else(educ >= 16, 1, 0),
+         gender = if_else(sex == 1 , 1, 0)) |>
+  drop_na()
+```
+
+```{r}
+table2 <- hourswork |>
+  group_by(degree, gender) |>
+  summarize(
+    n=n(), 
+    p_overwork = mean(overwork),
+    log_odds = log(p_overwork/(1-p_overwork))
+  )
+table2
+```
+
+## Linear Regression
+
+### Saturated Model
+
+#### by hand
+
+$$
+P(overwork_i) = \alpha + \beta_1 * degree_i + \beta_2 * gender_i + \beta_3 * degree_i * gender_i
+$$
+
+$\alpha$ = 0.275
+
+For people having no college degree and being female, the probability of work overtime is 27.5%.
+
+$\beta_1$ = 0.322 - 0.275 = 0.047
+
+Holing gender constant, having college degree increases the probability of work overtime by 4.7 percentage points.
+
+$\beta_2$ = 0.497 - 0.275 = 0.222
+
+Holing degree constant, being male increases the probability of work overtime by 22.2 percentage points.
+
+$\beta_3$ = 0.504 - 0.275 - 0.047 - 0.222 = -0.04
+
+For male, having college degree decreases the probability of work overtime by 4 percentage points; For college degree holders, being male decreases the probability of work overtime by 4 percentage points.
+
+#### by computer
+
+```{r}
+llm1 <- glm(overwork ~ degree * gender,
+            data = hourswork,
+            family = binomial(link = "identity"))
+summary(llm1)
+```
+
+$$
+P(overwork_i) = 0.275 + 0.047 * degree_i + 0.222 * gender_i - 0.040 * degree_i * gender_i
+$$
+
+### Restricted Model
+
+```{r}
+llm2 <- glm(overwork ~ degree + gender,
+            data = hourswork,
+            family = binomial(link = "identity"))
+summary(llm2)
+```
+
+$$
+P(overwork_i) = 0.281 + 0.030 * degree_i + 0.207 * gender_i
+$$
+
+$\alpha$ = 0.281
+
+For people having no college degree and being female, the probability of work overtime is 28.1%.
+
+$\beta_1$ = 0.030
+
+Holing gender constant, having college degree increases the probability of work overtime by 3 percentage points.
+
+$\beta_2$ = 0.497 - 0.275 = 0.207
+
+Holing degree constant, being male increases the probability of work overtime by 20.7 percentage points.
+
+### Compare
+
+```{r}
+anova(llm1, llm2)
+```
+
+The deviance of saturated model is smaller than restricted model but the difference is small. In this case, adding an interaction term doesn't provide more accuracy. The simpler model (restricted) is preferred.
+
+## Logits Regression
+
+### Saturate Model
+
+#### by hand
+
+$$
+log(\frac{P(overwork_i)}{1-P(overwork_i)}) = \alpha + \beta_1*degree_i + \beta_2 *gender_i + \beta_3 * degree_i * gender_i
+$$
+
+$\alpha$ = -0.969
+
+The log odds of work overtime of people who has no college degree(degree = 0) and is female(gender = 0) is -0.969
+
+$\beta_1$ = -0.744 - (-0.969) = 0.225
+
+Having college degree(degree = 1) increases on log-odds of work overtime by 1.665
+
+$\beta_2$ = -0.0138 - (-0.969) = 0.9552
+
+Being male(gender = 1) increases log-odds of work overtime by 0.9552
+
+$\beta_3$ = 0.0171 - (-0.969) - 0.225 - 0.95222 = -0.191
+
+For male, having college degree (degree = 1) decreases log-odds of work overtime by 0.191; For college degree holders, being male decreases log-odds of work overtime by 0.191.
+
+#### by computer
+```{r}
+LRR1 <- glm(overwork ~ degree*gender,
+          data = hourswork,
+          family = binomial(link = "logit"))
+summary(LRR1)
+```
+
+$$
+log(\frac{P(overwork_i)}{1-P(overwork_i)}) = -0.9694 + 0.2258*degree_i + 0.9556 *gender_i - 0.1949 * degree_i * gender_i
+$$
+
+### Restricted Model
+```{r}
+LRR2 <- glm(overwork ~ degree+gender,
+          data = hourswork,
+          family = binomial(link = "logit"))
+summary(LRR2)
+```
+
+$$
+log(\frac{P(overwork_i)}{1-P(overwork_i)}) = -0.9292 + 0.1245*degree_i + 0.8826 *gender_i
+$$
+
+```{r}
+exp(-0.9292)
+exp(0.1245)
+exp(0.8826)
+```
+
+For people having no college degree and is female, the odds ratio of work overtime is 0.394.
+
+Having college degree increases odds ratio by 1.13 times.
+
+Being male increases odds ratio by 2.42 times.
+
+### Compare
+```{r}
+anova(LRR1, LRR2)
+```
+The deviance of saturated model is smaller than restricted model but the difference is small. In this case, adding an interaction term doesn't provide more accuracy. The simpler model (restricted) is preferred.
+
+## Poissons Regression
+
+```{r}
+tablep2 <- hourswork |>
+  group_by(degree, gender) |>
+  summarize(
+    n=n(), 
+    workhour = mean(hrs1),
+  )
+tablep2
+```
+
+### Saturate Model
+
+#### by hand
+
+$$
+workhour_i = \alpha + \beta_1*degree_i + \beta_2 *gender_i + \beta_3 * degree_i * gender_i
+$$
+
+$\alpha$ = 37.9
+
+The weekly work hour for people having no college degree and being female is 37.9 hours.
+
+$beta_1$ = 38.7 - 37.9 = 0.8
+
+Having college degree increases weekly work hour by 0.8 hours.
+
+$beta_2$ = 44.6 - 37.9 = 6.7
+
+Being male increase weekly work hour by 6.7 hours.
+
+$beta_3$ = 44.7 - 37.9 - 0.8 - 6.7 = -0.7
+
+For male, Having college degree decreases weekly work hour by 0.7 hours.
+For college degree holders, being male decrease weekly work hour by 0.7 hours.
+
+#### by computer
+
+```{r}
+plmm1 <- glm(hrs1 ~ degree*gender,
+           data = hourswork,
+           family = poisson(link = "identity"))
+summary(plmm1)
+```
+
+$$
+workhour_i = 37.85 + 0.81*degree_i + 6.79 *gender_i - 0.79 * degree_i * gender_i
+$$
+### Restricted
+```{r}
+plmm2 <- glm(hrs1 ~ degree+gender,
+           data = hourswork,
+           family = poisson(link = "identity"))
+summary(plmm2)
+```
+
+$$
+workhour_i = 37.98 + 0.47*degree_i + 6.50 *gender_i
+$$
+
+For people having no college degree and is female, the weekly work hour is 37.98 hours.
+
+Having college degree increases weekly work hour by 0.47 hours.
+
+Being male increases weekly work hour by 6.5 hours.
+
+### Compare
+```{r}
+anova(plmm1, plmm2)
+```
+The deviance of saturated model is smaller than restricted model but the difference is small. In this case, p value > 0.05, adding an interaction term doesn't provide more accuracy. The simpler model (restricted) is preferred. 
 
